@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { prisma } from "@/lib/db";
+import { ingestPdf } from "@/lib/pinecone";
 
 const f = createUploadthing();
 
@@ -27,6 +28,7 @@ export const ourFileRouter = {
       console.log("Upload complete for userId:", metadata.userId);
       console.log("File URL", file.url);
 
+      // 1. Save file record to Postgres
       const createdFile = await prisma.userFile.create({
         data: {
           key: file.key,
@@ -36,6 +38,9 @@ export const ourFileRouter = {
           size: file.size,
         },
       });
+
+      // 2. Trigger PDF ingestion (parse → chunk → embed → store)
+      await ingestPdf({ fileId: createdFile.id, fileUrl: file.url });
 
       return { uploadedBy: metadata.userId, fileId: createdFile.id };
     }),
