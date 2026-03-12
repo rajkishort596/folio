@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.43",
+    "@ai-sdk/react": "^3.0.118",
     "@clerk/nextjs": "^7.0.1",
     "@langchain/community": "^1.1.22",
     "@langchain/core": "^1.1.31",

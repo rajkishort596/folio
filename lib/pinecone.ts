@@ -17,14 +17,14 @@ const getPineconeClient = () =>
 
 const getEmbeddings = () =>
   new GoogleGenerativeAIEmbeddings({
-    apiKey: process.env.GOOGLE_API_KEY!,
+    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY!,
     model: "gemini-embedding-001",
     taskType: TaskType.RETRIEVAL_DOCUMENT,
   });
 
 const getQueryEmbeddings = () =>
   new GoogleGenerativeAIEmbeddings({
-    apiKey: process.env.GOOGLE_API_KEY!,
+    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY!,
     model: "gemini-embedding-001",
     taskType: TaskType.RETRIEVAL_QUERY,
   });
@@ -116,5 +116,12 @@ export async function getRelevantContext(
 
   if (results.length === 0) return "";
 
-  return results.map((r) => r.pageContent).join("\n\n---\n\n");
+  // Include page numbers in the context so the AI can cite correctly
+  return results
+    .map((r) => {
+      const pageNum =
+        r.metadata?.["loc.pageNumber"] || r.metadata?.pageNumber || "unknown";
+      return `[Page ${pageNum}]: ${r.pageContent}`;
+    })
+    .join("\n\n---\n\n");
 }

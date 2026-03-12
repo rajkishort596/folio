@@ -38,3 +38,22 @@ export async function getDashboardData() {
     totalSize, // size is in bytes
   };
 }
+export async function getFileMessages(fileId: string) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return await prisma.message.findMany({
+    where: {
+      fileId,
+      file: {
+        userId,
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+}
