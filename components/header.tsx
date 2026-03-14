@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { SignInButton, SignUpButton, UserButton, Show } from "@clerk/nextjs";
 
 const menuItems = [
-  { name: "How it works", href: "#how-it-works" },
-  { name: "Features", href: "#features" },
-  { name: "Use cases", href: "#use-cases" },
-  { name: "Pricing", href: "#pricing" },
+  { name: "How it works", href: "how-it-works" },
+  { name: "Features", href: "features" },
+  { name: "Pricing", href: "pricing" },
+  { name: "FAQ", href: "faq" },
 ];
 
 export const HeroHeader = () => {
@@ -39,7 +40,7 @@ export const HeroHeader = () => {
           )}
         >
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
-            <div className="flex w-full justify-between lg:w-auto">
+            <div className="flex w-full justify-between items-center lg:w-auto">
               <Link
                 href="/"
                 aria-label="home"
@@ -48,78 +49,108 @@ export const HeroHeader = () => {
                 <Logo />
               </Link>
 
-              <button
-                onClick={() => setMenuState(!menuState)}
-                aria-label={menuState == true ? "Close Menu" : "Open Menu"}
-                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
-              >
-                <Menu className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
-                <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
-              </button>
+              <div className="flex items-center gap-2 lg:hidden">
+                <ThemeToggle />
+                <button
+                  onClick={() => setMenuState(!menuState)}
+                  aria-label={menuState == true ? "Close Menu" : "Open Menu"}
+                  className="relative z-20 -m-1 block cursor-pointer p-2.5"
+                >
+                  <Menu className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
+                  <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
+                </button>
+              </div>
             </div>
 
             <div className="absolute inset-0 m-auto hidden size-fit lg:block">
               <ul className="flex gap-8 text-sm">
                 {menuItems.map((item, index) => (
                   <li key={index}>
-                    <Link
-                      href={item.href}
-                      className="text-muted-foreground hover:text-accent-foreground block duration-150"
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const target = document.getElementById(item.href);
+                        if (target) {
+                          target.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      className="text-muted-foreground hover:text-accent-foreground block duration-150 cursor-pointer"
                     >
                       <span>{item.name}</span>
-                    </Link>
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
-              <div className="lg:hidden">
-                <ul className="space-y-6 text-base">
+            <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full rounded-3xl border p-8 shadow-2xl shadow-zinc-300/20 lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
+              <div className="lg:hidden w-full mb-8">
+                <ul className="space-y-6 text-center text-lg font-medium">
                   {menuItems.map((item, index) => (
                     <li key={index}>
-                      <Link
-                        href={item.href}
-                        className="text-muted-foreground hover:text-accent-foreground block duration-150"
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setMenuState(false);
+                          const target = document.getElementById(item.href);
+                          if (target) {
+                            setTimeout(() => {
+                              target.scrollIntoView({ behavior: "smooth" });
+                            }, 100); // small delay to allow menu animation to close
+                          }
+                        }}
+                        className="text-muted-foreground hover:text-foreground block transition-colors duration-200 cursor-pointer"
                       >
-                        <span>{item.name}</span>
-                      </Link>
+                        {item.name}
+                      </button>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit items-center">
-                <div className="flex w-full gap-3 sm:w-fit">
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="sm"
-                    className={cn(isScrolled && "lg:hidden")}
-                  >
-                    <Link href="#">
-                      <span>Login</span>
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    size="sm"
-                    className={cn(isScrolled && "lg:hidden")}
-                  >
-                    <Link href="#">
-                      <span>Sign Up</span>
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    size="sm"
-                    className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
-                  >
-                    <Link href="#">
-                      <span>Get Started</span>
-                    </Link>
-                  </Button>
+
+              <div className="flex w-full flex-col items-center justify-center gap-6 lg:flex-row lg:gap-6">
+                <div className="flex w-full flex-col items-center gap-6 lg:w-auto lg:flex-row">
+                  <Show when="signed-out">
+                    <SignInButton>
+                      <Link
+                        href="/sign-in"
+                        className="w-full max-w-[150px] lg:w-auto"
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={cn(
+                            "w-full lg:w-auto",
+                            isScrolled && "lg:hidden",
+                          )}
+                        >
+                          Login
+                        </Button>
+                      </Link>
+                    </SignInButton>
+                    <SignUpButton>
+                      <Link
+                        href="/sign-up"
+                        className="w-full max-w-[150px] lg:w-auto"
+                      >
+                        <Button
+                          size="sm"
+                          className={cn(
+                            "w-full lg:w-auto",
+                            isScrolled && "lg:hidden",
+                          )}
+                        >
+                          Sign Up
+                        </Button>
+                      </Link>
+                    </SignUpButton>
+                  </Show>
+                  <Show when="signed-in">
+                    <UserButton />
+                  </Show>
                 </div>
-                <div className="flex pt-2 sm:pt-0 lg:pl-1">
+
+                <div className="hidden lg:block border-l pl-4 dark:border-zinc-800">
                   <ThemeToggle />
                 </div>
               </div>

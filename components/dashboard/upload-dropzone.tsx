@@ -17,7 +17,7 @@ export function UploadDropzone() {
         endpoint="pdfUploader"
         onUploadBegin={(name) => {
           setIsUploading(true);
-          toast.info("Uploading document...", {
+          toast.info("📄 Saving document...", {
             description: `Sending ${name} to the cloud.`,
           });
         }}
@@ -25,15 +25,8 @@ export function UploadDropzone() {
           setIsUploading(false);
           const fileId = res?.[0]?.serverData?.fileId;
 
-          toast.success("Upload successful!", {
+          toast.success("✅ Upload successful! ✨", {
             description: "Redirecting to your workspace...",
-            icon: (
-              <ClientIcon
-                name="CheckCircle2"
-                size={16}
-                className="text-emerald-500"
-              />
-            ),
           });
 
           if (fileId) {
@@ -44,7 +37,7 @@ export function UploadDropzone() {
         }}
         onUploadError={(error: Error) => {
           setIsUploading(false);
-          toast.error("Upload failed", {
+          toast.error("❌ Upload failed", {
             description: error.message,
           });
         }}
