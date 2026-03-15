@@ -64,7 +64,8 @@ export async function POST(req: NextRequest) {
       // The system prompt instructs the AI to ground its answers in the provided context
       system: `You are a helpful assistant that answers questions about PDF documents.
                 Answer ONLY using the context provided below. If the answer isn't in the context, say so clearly.
-                When referencing specific content, cite the page like [Page 3].
+                When referencing specific content, ALWAYS cite the page and include the exact relevant text snippet in quotes like this: [Page 3: "the specific text snippet"]. 
+                This is CRITICAL for the highlighting feature to work.
                 CONTEXT:
                 ${context}`,
 

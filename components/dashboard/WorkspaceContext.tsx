@@ -13,8 +13,8 @@ interface WorkspaceContextType {
   currentPage: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   jumpToPage: (page: number) => void;
-  currentHighlight: string | null;
-  setCurrentHighlight: (highlight: string | null) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(
@@ -23,7 +23,7 @@ const WorkspaceContext = createContext<WorkspaceContextType | undefined>(
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentHighlight, setCurrentHighlight] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const jumpToPage = (page: number) => {
     setCurrentPage(page);
@@ -35,8 +35,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         currentPage,
         setCurrentPage,
         jumpToPage,
-        currentHighlight,
-        setCurrentHighlight,
+        searchQuery,
+        setSearchQuery,
       }}
     >
       {children}
