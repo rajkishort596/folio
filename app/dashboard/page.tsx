@@ -40,7 +40,7 @@ export default async function DashboardPage() {
                   Recent Activity
                 </h2>
                 <Link
-                  href="/documents"
+                  href="/dashboard/documents"
                   className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest px-4 py-2 rounded-lg hover:bg-muted"
                 >
                   View All
