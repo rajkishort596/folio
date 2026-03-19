@@ -26,7 +26,7 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("Upload complete for userId:", metadata.userId);
-      console.log("File URL", file.url);
+      console.log("File URL", file.ufsUrl);
 
       // 1. Save file record to Postgres
       const createdFile = await prisma.userFile.create({
@@ -34,13 +34,13 @@ export const ourFileRouter = {
           key: file.key,
           name: file.name,
           userId: metadata.userId,
-          url: file.url,
+          url: file.ufsUrl,
           size: file.size,
         },
       });
 
       // 2. Trigger PDF ingestion (parse → chunk → embed → store)
-      await ingestPdf({ fileId: createdFile.id, fileUrl: file.url });
+      await ingestPdf({ fileId: createdFile.id, fileUrl: file.ufsUrl });
 
       return { uploadedBy: metadata.userId, fileId: createdFile.id };
     }),
